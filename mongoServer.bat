@@ -1,0 +1,1 @@
+start cmd.exe /k "mongod --dbpath=C:\data\db"
