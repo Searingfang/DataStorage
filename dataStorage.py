@@ -17,10 +17,16 @@ users = db.users
 
 def main():
     data = da.read_dailymotion(2)
-    print yt.find_one()
+    print dm.find_one()
     for x in xrange(len(data)):
         for y in data[x][u'list']:
             post_id = dm.insert_one(y).inserted_id
+            print post_id
+    data = da.read_youtube(2)
+    print yt.find_one()
+    for x in xrange(len(data)):
+        for y in data[x][u'items']:
+            post_id = yt.insert_one(y).inserted_id
             print post_id
 
 if __name__ == '__main__':
