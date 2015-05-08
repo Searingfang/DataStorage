@@ -13,7 +13,7 @@ def format_date(date):
 def read_dailymotion(max_pages):
     limit = 1
     results = []
-    url = "https://api.dailymotion.com/videos?fields=created_time,title,views_total,&sort=visited&limit=100&page="
+    url = "https://api.dailymotion.com/videos?fields=id,created_time,title,views_total,&sort=visited&limit=100&page="
     r = requests.get(url + str(limit))
     struc = r.json()
     results.append(struc)
@@ -27,7 +27,7 @@ def read_dailymotion(max_pages):
 def read_youtube(max_pages):
     limit = 1
     results = []
-    url = "https://www.googleapis.com/youtube/v3/videos?part=statistics%2Csnippet&chart=mostPopular&key=AIzaSyDMg-eb-hHji1WEF_H_je1SXSt9HsMeofU"
+    url = "https://www.googleapis.com/youtube/v3/videos?part=id%2Cstatistics%2Csnippet&chart=mostPopular&key=AIzaSyDMg-eb-hHji1WEF_H_je1SXSt9HsMeofU"
     r = requests.get(url)
     struc = r.json()
     results.append(struc)

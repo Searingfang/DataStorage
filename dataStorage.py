@@ -16,18 +16,24 @@ dm = db.dailymotion
 users = db.users
 
 def main():
-    data = da.read_dailymotion(2)
-    print dm.find_one()
+    data = da.read_dailymotion(5)
     for x in xrange(len(data)):
         for y in data[x][u'list']:
-            post_id = dm.insert_one(y).inserted_id
-            print post_id
-    data = da.read_youtube(2)
-    print yt.find_one()
+            if dm.find_one({'id': y[u'id']}):
+                dm.update({'id':y[u'id']}, y)
+                print 'update'
+            else:
+                dm.insert_one(y)
+                print 'insert'
+    data = da.read_youtube(5)
     for x in xrange(len(data)):
         for y in data[x][u'items']:
-            post_id = yt.insert_one(y).inserted_id
-            print post_id
+            if yt.find_one({'id': y[u'id']}):
+                yt.update({'id':y[u'id']}, y)
+                print 'update'
+            else:
+                yt.insert_one(y)
+                print 'insert'
 
 if __name__ == '__main__':
     main()
