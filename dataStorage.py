@@ -16,7 +16,7 @@ dm = db.dailymotion
 users = db.users
 
 def main():
-    data = da.read_dailymotion(5)
+    data = da.read_dailymotion(20)
     for x in xrange(len(data)):
         for y in data[x][u'list']:
             if dm.find_one({'id': y[u'id']}):
@@ -34,6 +34,24 @@ def main():
             else:
                 yt.insert_one(y)
                 print 'insert'
-
+    
+    all_views = 0
+    videos = 0
+    #retrieve data
+    for result in dm.find():
+        all_views += result['views_total']
+        videos += 1
+    print "dailymotion views ", all_views
+    print "dailymotion videos ", videos
+    
+    all_views = 0
+    videos = 0
+    for result in yt.find():
+        all_views += int(result['statistics']['viewCount'])
+        videos += 1
+    print "youtube views ", all_views
+    print "youtube videos ", videos
+    
+    MongoClient.close(client)
 if __name__ == '__main__':
     main()
