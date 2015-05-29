@@ -13,7 +13,7 @@ def format_date(date):
 def read_dailymotion(max_pages):
     limit = 1
     results = []
-    url = "https://api.dailymotion.com/videos?fields=id,created_time,title,views_total,&sort=visited&limit=100&page="
+    url = "https://api.dailymotion.com/videos?fields=id,created_time,title,views_total,duration,owner.fans_total,description,&sort=visited&limit=100&page="
     r = requests.get(url + str(limit))
     struc = r.json()
     results.append(struc)
@@ -22,6 +22,11 @@ def read_dailymotion(max_pages):
         r = requests.get(url + str(limit))
         struc = r.json()
         results.append(struc)
+        print 'dmres ' + str(limit)
+    for result in results:
+        for entry in result[u'list']:
+            entry['fans_total'] = entry['owner.fans_total']
+            del entry['owner.fans_total']
     return results
     
 def read_youtube(max_pages):
@@ -37,6 +42,30 @@ def read_youtube(max_pages):
         results.append(struc)
         limit+=1
     return results
+
+def search_youtube(max_pages):
+    limit = 1
+    results = []
+    videos = []
+    url = "https://www.googleapis.com/youtube/v3/search?part=id&maxResults=50&order=viewCount&type=video&key=AIzaSyDMg-eb-hHji1WEF_H_je1SXSt9HsMeofU"
+    r = requests.get(url)
+    struc = r.json()
+    results.append(struc)
+    while u'nextPageToken' in struc and limit < max_pages:
+        r = requests.get(url + '&pageToken=' + struc[u'nextPageToken'])
+        struc = r.json()
+        results.append(struc)
+        limit+=1
+        print 'ytres ' + str(limit)
+    url = "https://www.googleapis.com/youtube/v3/videos?part=id%2Cstatistics%2Csnippet%2CcontentDetails&maxResults=50&key=AIzaSyDMg-eb-hHji1WEF_H_je1SXSt9HsMeofU"
+    for result in results:
+        idList = []
+        for x in result[u'items']:
+            idList.append(x[u'id'][u'videoId'])
+        r = requests.get(url + '&id=' + ','.join(idList))
+        struc = r.json()
+        videos.append(struc)
+    return videos
     
 def main():
     f = open('data.txt', 'w')
