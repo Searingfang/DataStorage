@@ -16,7 +16,7 @@ dm = db.dailymotion
 users = db.users
 
 def main():
-    data = da.read_dailymotion(1)
+    data = da.read_dailymotion(100)
     for x in xrange(len(data)):
         for y in data[x][u'list']:
             if dm.find_one({'id': y[u'id']}):
@@ -30,10 +30,10 @@ def main():
         for y in data[x][u'items']:
             if yt.find_one({'id': y[u'id']}):
                 yt.update({'id':y[u'id']}, y)
-                #print 'update'
+                print 'update'
             else:
                 yt.insert_one(y)
-                #print 'insert'
+                print 'insert'
     
     all_views = 0
     videos = 0
